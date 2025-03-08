@@ -62,7 +62,7 @@
     <div id="popup" class="popup">
         <form id="subscriptionForm" class="space-y-4">
             <input type="text" id="fullName" placeholder="FULL NAME" required>
-            <input type="email" id="email" placeholder="MAIL" required>
+            <input type="email" id="email" placeholder="EMAIL" required>
             <select id="country" required>
                 <option value="" disabled selected>COUNTRY</option>
                 <option value="Afghanistan">Afghanistan</option>
@@ -262,7 +262,7 @@
                 <option value="Zambia">Zambia</option>
                 <option value="Zimbabwe">Zimbabwe</option>
             </select>
-            <button type="submit">Subscribe</button>
+            <button type="submit">Execute</button>
         </form>
         <div id="closeBtn" class="close-btn"><a href="../index.html" style="text-decoration: none;">X</a></div>
     </div>
@@ -276,7 +276,7 @@
             // Show the popup with zoom-out effect
             setTimeout(() => {
                 popup.classList.add('show');
-            }, 100);
+            }, 30);
 
             // Close the popup
             closeBtn.addEventListener('click', () => {

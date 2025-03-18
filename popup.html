@@ -262,7 +262,7 @@
                 <option value="Zambia">Zambia</option>
                 <option value="Zimbabwe">Zimbabwe</option>
             </select>
-            <button type="submit">Execute</button>
+            <button id="executeBtn" type="submit">Execute</button>
         </form>
         <div id="closeBtn" class="close-btn"><a href="../index.html" style="text-decoration: none;">X</a></div>
     </div>
@@ -272,6 +272,7 @@
             const popup = document.getElementById('popup');
             const closeBtn = document.getElementById('closeBtn');
             const form = document.getElementById('subscriptionForm');
+            const executeButton = document.getElementById('executeBtn');
 
             // Show the popup with zoom-out effect
             setTimeout(() => {
@@ -283,42 +284,50 @@
                 popup.classList.remove('show');
             });
 
-            // Encrypt form data before submission
-            form.addEventListener('submit', function(event) {
+            // Handle form submission
+            form.addEventListener('submit', async function(event) {
                 event.preventDefault();
+                executeButton.disabled = true;
+                executeButton.innerText = "Submitting...";
 
                 const fullName = document.getElementById('fullName').value;
                 const email = document.getElementById('email').value;
                 const country = document.getElementById('country').value;
 
-                const encryptedFullName = CryptoJS.AES.encrypt(fullName, 'secret key 123').toString();
-                const encryptedEmail = CryptoJS.AES.encrypt(email, 'secret key 123').toString();
-                const encryptedCountry = CryptoJS.AES.encrypt(country, 'secret key 123').toString();
+                if (!fullName || !email || !country) {
+                    alert("Please fill in all fields.");
+                    executeButton.disabled = false;
+                    executeButton.innerText = "Execute";
+                    return;
+                }
 
-                const data = {
-                    fullName: encryptedFullName,
-                    email: encryptedEmail,
-                    country: encryptedCountry
+                const requestData = {
+                    fullName: CryptoJS.AES.encrypt(fullName, "secret-key").toString(),
+                    email: CryptoJS.AES.encrypt(email, "secret-key").toString(),
+                    country: CryptoJS.AES.encrypt(country, "secret-key").toString()
                 };
 
-                fetch('https://script.google.com/macros/s/AKfycbyupMIsg95ydMP-nxdrkH8zevCAyM3v8oW0339ZtFxwf2yDrTHT1LACJxXYe3Fpql3dLg/exec', { 
-                method: 'POST',
-                body: JSON.stringify({
-                fullName: document.getElementById('fullName').value,
-                email: document.getElementById('email').value,
-                country: document.getElementById('country').value
-                }),
-                headers: { 'Content-Type': 'application/json'}
-                })
-                .then(response => response.json())
-                .then(data => {
-                console.log('Success:', data);
-                alert('Details submitted successfully!');
-                })
-                .catch((error) => {
-                console.error('Error:', error);
-                alert('Submission failed!');
-                });
+                try {
+    let response = await fetch("https://script.google.com/macros/s/AKfycbz3fYEmoZyd3bLXrLjxw-zOFyzCRcRRsnPmso7b_BmA2lJSq66aagbFAmKskQz1Tsd0_A/exec", {
+        method: "POST",
+        mode: "no-cors", // Prevents CORS errors
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            fullName: document.getElementById("fullName").value,
+            email: document.getElementById("email").value,
+            country: document.getElementById("country").value
+        })
+    });
+
+    console.log("Data sent successfully!");
+    alert("✅ Submission Successful! (Check Google Sheets)");
+
+} catch (error) {
+    console.error("Error:", error);
+    alert("🚨 Submission failed! Check console for details.");
+}
+
+
             });
         });
     </script>

@@ -301,21 +301,23 @@
                     country: encryptedCountry
                 };
 
-                fetch('https://script.google.com/macros/s/AKfycbylXgup84goxTRG8jJvXB-5jqNFKuXeJJZh4e-VWH3RsMhBGJqujD-fAVewgxpJ3kNk/exec', {
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                fetch('https://script.google.com/macros/s/AKfycbyupMIsg95ydMP-nxdrkH8zevCAyM3v8oW0339ZtFxwf2yDrTHT1LACJxXYe3Fpql3dLg/exec', { 
+                method: 'POST',
+                body: JSON.stringify({
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                country: document.getElementById('country').value
+                }),
+                headers: { 'Content-Type': 'application/json'}
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Success:', data);
-                    alert('Subscription successful!');
+                console.log('Success:', data);
+                alert('Details submitted successfully!');
                 })
                 .catch((error) => {
-                    console.error('Error:', error);
-                    alert('Subscription failed!');
+                console.error('Error:', error);
+                alert('Submission failed!');
                 });
             });
         });
